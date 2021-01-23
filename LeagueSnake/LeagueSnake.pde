@@ -11,8 +11,8 @@ int segy;
 
 // Add a constructor with parameters to initialize each variable.
   public Segment(int x, int y){
-    segx=x;
-    segy=y;
+    this.segx=x;
+    this.segy=y;
   }
 
 
@@ -57,21 +57,24 @@ void dropFood() {
 
 void draw() {
   background(0);
+  fill(255);
+  textSize(25);
+  text("Score: " + foodEaten, 200, 30);
   drawFood();
-  drawSnake();
   move();
+  drawSnake();
   eat();
 }
 
 void drawFood() {
   //Draw the food
-  fill(255,2,5);
+  fill(25,255,5);
   rect(foodx, foody, 10, 10);
 }
 
 void drawSnake() {
   //Draw the head of the snake followed by its tail
-  fill(25,255,25);
+  fill(255,25,25);
   rect(head.segx, head.segy,10,10);
   manageTail();
 }
@@ -94,7 +97,7 @@ void manageTail() {
   //This produces the illusion of the snake tail moving.
   checkTailCollision();
   drawTail();
-  rect(head.segx, head.segy, 10, 10);
+  tail.add(new Segment(head.segx, head.segy));
   tail.remove(0);
 }
 
@@ -118,16 +121,16 @@ void checkTailCollision() {
 
 void keyPressed() {
   //Set the direction of the snake according to the arrow keys pressed
-  if(keyCode==38){
+  if(keyCode==38 && direction!=DOWN){
     direction=UP;
   }
-  if(keyCode==39){
+  if(keyCode==39 && direction!=LEFT){
     direction=RIGHT;
   }
-  if(keyCode==40){
+  if(keyCode==40  && direction!=UP){
     direction=DOWN;
   }
-  if(keyCode==37){
+  if(keyCode==37 && direction!=RIGHT){
     direction=LEFT;
   }
 }
@@ -137,16 +140,16 @@ void move() {
   
   switch(direction) {
   case UP:
-    head.segy-=5;
+    head.segy-=10;
     break;
   case DOWN:
-    head.segy+=5;
+    head.segy+=10;
     break;
   case LEFT:
-   head.segx-=5;
+   head.segx-=10;
     break;
   case RIGHT:
-    head.segx+=5; 
+    head.segx+=10; 
     break;
   }
   checkBoundaries();
@@ -154,17 +157,17 @@ void move() {
 
 void checkBoundaries() {
  //If the snake leaves the frame, make it reappear on the other side
- if(head.segx<-10){
-   head.segx=510;
+ if(head.segx<0){
+   head.segx=500;
  }
- if(head.segx>510){
-   head.segx=-10;
+ if(head.segx>500){
+   head.segx=0;
  }
- if(head.segy>510){
-   head.segy=-10;
+ if(head.segy>500){
+   head.segy=0;
  }
- if(head.segy<-10){
-   head.segy=510;
+ if(head.segy<0){
+   head.segy=500;
  }
 
 }
@@ -173,10 +176,9 @@ void checkBoundaries() {
 
 void eat() {
   //When the snake eats the food, its tail should grow and more food appear
-  if(head.segx<=foodx && head.segx+10>=foodx+10 && head.segy<=foody && head.segy+10>=foody+10){
+  if(head.segx==foodx && head.segy==foody ){
     dropFood();
     foodEaten++;
-    
     tail.add(new Segment (head.segx, head.segy));
   }
 }
